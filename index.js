@@ -57,21 +57,25 @@ setInterval(() => {
     keyDown = ""
 }, 25)
 
-
+var lastInputUpdate = 0
 
 function setPrimaryButtonState(e) {
-  var flags = e.buttons !== undefined ? e.buttons : e.which;
-  
-  if (e.which == 1) {
-    if (e.buttons == 0) leftButtonDown = false
-    else if (e.buttons == 1) leftButtonDown = true
-  } else if (e.which == 3) {
-    if (e.buttons == 0) rightButtonDown = false
-    else if (e.buttons == 2) rightButtonDown = true
-  } else if (e.which == 2) {
-    if (e.buttons == 0) middleButtonDown = false
-    else if (e.buttons == 4) middleButtonDown = true
-  }
+    setTimeout(() => {
+        var flags = e.buttons !== undefined ? e.buttons : e.which;
+
+        if (e.which == 1) {
+        if (e.buttons == 0) leftButtonDown = false
+        else if (e.buttons == 1) leftButtonDown = true
+        } else if (e.which == 3) {
+        if (e.buttons == 0) rightButtonDown = false
+        else if (e.buttons == 2) rightButtonDown = true
+        } else if (e.which == 2) {
+        if (e.buttons == 0) middleButtonDown = false
+        else if (e.buttons == 4) middleButtonDown = true
+        }
+        lastInputUpdate = Date.now();
+    }, Math.max(100 - (Date.now() - lastInputUpdate), 0))
+    
 }
 
 document.addEventListener("mousedown", setPrimaryButtonState);
