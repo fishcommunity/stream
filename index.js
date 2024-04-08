@@ -8,7 +8,11 @@ function getCookie(cname) {
 var mouseX = 0
 var mouseY = 0
 
-var primaryMouseButtonDown = false;
+var leftButtonDown = false;
+var rightButtonDown = false;
+var middleButtonDown = false;
+
+var keyDown = ""
 
 setInterval(() => {
     const data1 = {
@@ -28,13 +32,18 @@ setInterval(() => {
             document.getElementById("picture").src = "data:image/bmp;base64," + json.picture
         }
     });
+}, 50)
 
+setInterval(() => {
     const data2 = {
         "user": "traox",
         "input": {
             "mouseX": mouseX,
             "mouseY": mouseY,
-            "leftClick": primaryMouseButtonDown
+            "leftClick": leftButtonDown,
+            "rightClick": rightButtonDown,
+            "middleClick": middleButtonDown,
+            "key": keyDown
         },
     };
     fetch('https://traoxfish.us-3.evennode.com/stream/uploadinput', {
@@ -45,13 +54,24 @@ setInterval(() => {
         },
         body: JSON.stringify(data2),
     })
-}, 50)
+    keyDown = ""
+}, 25)
 
 
 
 function setPrimaryButtonState(e) {
   var flags = e.buttons !== undefined ? e.buttons : e.which;
-  primaryMouseButtonDown = (flags & 1) === 1;
+  
+  if (e.which == 1) {
+    if (e.buttons == 0) leftButtonDown = false
+    else if (e.buttons == 1) leftButtonDown = true
+  } else if (e.which == 3) {
+    if (e.buttons == 0) rightButtonDown = false
+    else if (e.buttons == 2) rightButtonDown = true
+  } else if (e.which == 2) {
+    if (e.buttons == 0) middleButtonDown = false
+    else if (e.buttons == 4) middleButtonDown = true
+  }
 }
 
 document.addEventListener("mousedown", setPrimaryButtonState);
@@ -66,3 +86,11 @@ document.getElementById("picture").onmousemove = function(e) {
     mouseX = x
     mouseY = y
 }
+
+document.oncontextmenu = function(e) {
+    return false;
+}
+
+document.addEventListener('keydown', function(event) {
+    keyDown = event.key;
+});
