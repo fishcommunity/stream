@@ -1,4 +1,9 @@
+const urlParams = new URLSearchParams(window.location.search);
 
+function getCookie(cname) {
+
+    return urlParams.get(cname);
+}
 
 var mouseX = 0
 var mouseY = 0
@@ -7,7 +12,7 @@ var primaryMouseButtonDown = false;
 
 setInterval(() => {
     const data1 = {
-        "user": "traox",
+        "user": getCookie("user"),
     };
     fetch('https://traoxfish.us-3.evennode.com/stream/getpicture', {
         method: 'POST',
